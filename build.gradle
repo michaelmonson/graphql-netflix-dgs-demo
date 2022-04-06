@@ -13,10 +13,20 @@ repositories {
 }
 
 dependencies {
+	// DGS BOM / platform dependency (the BOM ensures that ALL of the DGS dependencies are aligned, using the same version).
+	//   --> This is the only place we need to set the version of DGS we are using:
+	implementation(platform('com.netflix.graphql.dgs:graphql-dgs-platform-dependencies:3.12.1'))
+
+	// DGS dependencies.  We don't have to specify a version here!
+	implementation 'com.netflix.graphql.dgs:graphql-dgs-spring-boot-starter'
+	implementation 'com.netflix.graphql.dgs:graphql-dgs-subscriptions-websockets-autoconfigure'
+
+	//Additional Jackson dependency.  We don't need to specify a version because Jackson is pat of the BOM/platform definition.
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-joda'
+
+	//Spring dependencies:
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation(platform('com.netflix.graphql.dgs:graphql-dgs-platform-dependencies:latest.release'))
-	implementation 'com.netflix.graphql.dgs:graphql-dgs-spring-boot-starter'
 }
 
 tasks.named('test') {
