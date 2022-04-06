@@ -3,6 +3,16 @@ type Query {
 }
 
 type Show {
+    id: Int
     title: String
     releaseYear: Int
 }
+
+type Subscription {
+    reviewAdded(showId: Int!): Review
+}
+
+
+scalar DateTime
+scalar Upload
+directive @skipcodegen on FIELD_DEFINITION
