@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.netflix.graphql.dgs.DgsComponent;
+import com.netflix.graphql.dgs.DgsData;
 import com.netflix.graphql.dgs.DgsQuery;
 import com.netflix.graphql.dgs.InputArgument;
 
@@ -16,6 +17,30 @@ public class DemoApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
+
+
+
+	/** ----------------------------------------------------------
+	 *  Below is an example of using a PreparsedDocumentProvider.
+	 *  Uncomment to enable
+	 * ----------------------------------------------------------
+	 */
+//	@Configuration
+//	static class PreparsedDocumentProviderConfig {
+//
+//		private final Cache<String, PreparsedDocumentEntry> cache = Caffeine.newBuilder().maximumSize(250)
+//				.expireAfterAccess(5, TimeUnit.MINUTES).recordStats().build();
+//
+//
+//		@Bean
+//		public PreparsedDocumentProvider preparsedDocumentProvider() {
+//			return (executionInput, parseAndValidateFunction) -> {
+//				Function<String, PreparsedDocumentEntry> mapCompute = key -> parseAndValidateFunction.apply(executionInput);
+//				return cache.get(executionInput.getQuery(), mapCompute);
+//			};
+//		}
+//	}
+
 
 	@DgsComponent
 	public class ShowsDatafetcher {
@@ -37,7 +62,25 @@ public class DemoApplication {
 			return shows.stream().filter(s -> s.getTitle().contains(titleFilter)).collect(Collectors.toList());
 		}
 	}
+
+
+	@DgsComponent
+	public class ShowDataFetcher {
+
+		/*
+		 * If the field parameter is not set, the method name will be used as the field name. 
+		 * The @DgsQuery, @DgsMutation and @DgsSubscription annotations are shorthands to define 
+		 * datafetchers on the Query, Mutation and Subscription types. 
+		 */
+		@DgsData(parentType = "Query", field = "shows")
+		public List<Show> shows() {
+
+			//Load shows from a database and return the list of Show objects:
+			return shows;
+		}
+	}
 	
+
 	public class Show {
 		private final String title;
 		private final Integer releaseYear;
@@ -55,6 +98,5 @@ public class DemoApplication {
 			return releaseYear;
 		}
 	}
-
 
 }
