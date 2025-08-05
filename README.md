@@ -20,3 +20,46 @@ This project was created to experiment with:
 - Gradle
 
 ## Project Structure
+    src/
+    ├── main/
+    │   ├── java/
+    │   │   └── com.example.dgsdemo/
+    │   │       ├── DgsDemoApplication.java
+    │   │       └── datafetchers/
+    │   │           └── ExampleDataFetcher.java
+    │   └── resources/
+    │       └── schema/
+    │           └── schema.graphqls
+
+## GraphQL Schema
+
+Located in `src/main/resources/schema/schema.graphqls`, the schema defines basic queries such as:
+
+```graphql
+type Query {
+  hello: String
+}
+```
+
+## Resolvers
+Resolvers are implemented using @DgsComponent and @DgsData annotations. Example:
+@DgsComponent
+public class ExampleDataFetcher {
+    @DgsData(parentType = "Query", field = "hello")
+    public String getHello() {
+        return "Hello from DGS!";
+    }
+}
+
+## Running the App
+- Clone the repo:
+git clone https://github.com/michaelmonson/graphql-netflix-dgs-demo.git
+cd graphql-netflix-dgs-demo
+- Build and run:
+./gradlew bootRun
+- Access GraphQL Playground (if configured) or test queries via Postman/cURL.
+
+## Additional Notes
+- This is a demo project—feel free to expand it with mutations, subscriptions, or federation.
+- Ideal for learning, prototyping, or onboarding new developers to GraphQL with DGS.
+
